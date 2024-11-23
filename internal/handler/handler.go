@@ -11,6 +11,11 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	completedMessage   = "Operation successfully completed"
+	invalidUUIDMessage = "invalid UUID"
+)
+
 type Handler interface {
 	HandleWalletOperation(w http.ResponseWriter, r *http.Request)
 	GetWalletBalance(w http.ResponseWriter, r *http.Request)
@@ -55,7 +60,7 @@ func (h *handlerImpl) HandleWalletOperation(w http.ResponseWriter, r *http.Reque
 
 	// В случае отсутствия ошибок возвращаем статус ОК
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Operation successfully completed"))
+	w.Write([]byte(completedMessage))
 
 }
 
@@ -69,7 +74,7 @@ func (h *handlerImpl) GetWalletBalance(w http.ResponseWriter, r *http.Request) {
 		// 	http.Error(w, "wallet ID is required", http.StatusBadRequest)
 		// 	return
 		// }
-		http.Error(w, "invalid UUID", http.StatusBadRequest)
+		http.Error(w, invalidUUIDMessage, http.StatusBadRequest)
 		return
 	}
 
