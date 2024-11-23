@@ -1,0 +1,36 @@
+version: '3.8'
+
+# Устанавливаем сервисы
+services:
+  wallet-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - APP_PORT=${APP_PORT}
+    depends_on:
+      - ${DB_HOST}
+
+  wallet-db:
+  # Описываем контейнер для базы данных кошелька
+    image: postgres:15
+    container_name: ${DB_HOST}
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - wallet-db-data:/var/lib/postgresql/data
+
+volumes:
+  wallet-db-data:
